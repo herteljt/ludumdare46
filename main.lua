@@ -2,7 +2,12 @@ function love.load()
     shipX = 800 / 2
     shipY = 600 / 2
     shipAngle = 0
+
+    shootSfx = love.audio.newSource("sound/laser4.ogg", "static")
+
+
 end
+
 
 function love.update(dt)
 -- move small circle
@@ -13,14 +18,29 @@ function love.update(dt)
     if love.keyboard.isDown('left') then
          shipAngle = shipAngle - 10 * dt
     end
--- move large circle
-if love.keyboard.isDown('up') then
-     shipY = shipY - 5
-end
 
-if love.keyboard.isDown('down') then
-     shipY = shipY + 5
-end
+    -- move large circle
+    if love.keyboard.isDown('w') then
+        shipY = shipY - 5
+    end
+
+    if love.keyboard.isDown('s') then
+        shipY = shipY + 5
+    end
+
+    if love.keyboard.isDown('d') then
+        shipX = shipX + 5
+        --shootSfx:play()
+    end
+
+    if love.keyboard.isDown('a') then
+        shipX = shipX - 5
+    end
+
+    if love.keyboard.isDown('f') then
+        playSound(shootSfx)
+    end
+
 -- end program
     if love.keyboard.isDown('escape') then
          love.event.quit()
@@ -43,4 +63,11 @@ function love.draw()
     -- Temporary
     love.graphics.setColor(1, 1, 1)
     love.graphics.print('shipAngle: '..shipAngle)
+end
+
+function playSound(sound)
+  --sound:rewind(sound)
+  pitchMod = 0.5 + love.math.random(0, 10)/25
+  sound:setPitch(pitchMod)
+  sound:play()
 end
