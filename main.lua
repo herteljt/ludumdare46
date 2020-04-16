@@ -3,7 +3,7 @@ function love.load()
     shipY = 600 / 2
     shipAngle = 0
 
-    shootSfx = love.audio.newSource("sound/laser4.ogg", "static")
+    shootSfx = love.audio.newSource("sound/laser6.ogg", "static")
 
 
 end
@@ -69,5 +69,6 @@ function playSound(sound)
   --sound:rewind(sound)
   pitchMod = 0.5 + love.math.random(0, 10)/25
   sound:setPitch(pitchMod)
+  sound:stop()
   sound:play()
 end
