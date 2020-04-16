@@ -4,7 +4,7 @@ function love.load()
     shipAngle = 0
 
     shootSfx = love.audio.newSource("sound/laser6.ogg", "static")
-
+    bullets = {}
 
 end
 
@@ -44,6 +44,12 @@ function love.update(dt)
 -- end program
     if love.keyboard.isDown('escape') then
          love.event.quit()
+    end
+
+---starting to add bullets following https://simplegametutorials.github.io/asteroids/
+    for bulletIndex, bullet in ipairs(bullets) do
+         love.graphics.setColor(0, 1, 0)
+         love.graphics.circle('fill', bullet.x, bullet.y, 5)
     end
 end
 
