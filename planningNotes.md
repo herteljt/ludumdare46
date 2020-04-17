@@ -1,4 +1,4 @@
-Ludum Dare 46
+## Ludum Dare 46
 https://ldjam.com/
 
 Game Engine: https://love2d.org/
@@ -7,45 +7,54 @@ Exporting to HTML: https://github.com/TannerRogalsky/love.js
 Animation Tutorial
 https://love2d.org/wiki/Tutorial:Animation
 
+### Design Team
+https://ldjam.com/users/chux0r
+https://ldjam.com/users/trb0grl
+https://ldjam.com/users/achmorrison
+https://ldjam.com/users/akraut
+https://ldjam.com/users/joshh
 
-Graphics
+
+### Initial Focus Areas
+##### Graphics
 chux0r
 
-Storyboard
+##### Storyboard
 trb0grl
 
-Sound
-achmorrison
+##### Sound
+???
 
-Coding
+##### Coding
 akraut
 joshh
 
-Maze Game with obstacles
+### Communication
+Zoom Room Check-In
+- Fri Night ~8:30pm
+- Sat Morning ~9am
+- Sat Night ~8:30pm
+- Sun Morning ~9am
+- Sun Night ~8:30pm
 
-Player Field
+#### Story
+
+#### Objective
+Maze game with obstacles. Player is set in a location and trying to avoid COVID 19 and navigate to a item. Then to the exit.
+
+#### Player Field
 800 x 600
 24 x 24 pixel sprites
 
-
-Name Ideas
+#### Name Ideas
 Pan Dem Mike
 
-Level Ideas
+#### Level Ideas
 Level 1 grocery store
 - toilet paper goal
 - maze to make it to paper
 Level 2 airport -
 Level 3 cruise ship
-
-Zoom Room Open
-Check-In
-Fri Night ~8:30pm
-Sat Morning ~9am
-Sat Night ~8:30pm
-Sun Morning ~9am
-Sun Night ~8:30pm
-
 
 
 -----------------------
@@ -64,5 +73,4 @@ Ideas:
 - Covid virus that you deliver a vaccine.
 - Ship be the virus. The stems could be shooting.
 - Visit to the grocery store. Spraying cleaner on people who come at you.
-
 - outside the body level, inside the body level
