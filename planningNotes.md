@@ -7,12 +7,13 @@ Exporting to HTML: https://github.com/TannerRogalsky/love.js
 Animation Tutorial
 https://love2d.org/wiki/Tutorial:Animation
 
-### Design Team
+### Team
 https://ldjam.com/users/chux0r
 https://ldjam.com/users/trb0grl
 https://ldjam.com/users/achmorrison
 https://ldjam.com/users/akraut
 https://ldjam.com/users/joshh
+https://ldjam.com/users/leokrechmer
 
 
 ### Initial Focus Areas
@@ -23,7 +24,7 @@ chux0r
 trb0grl
 
 ##### Sound
-???
+leokrechmer
 
 ##### Coding
 akraut
