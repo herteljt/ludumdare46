@@ -75,7 +75,8 @@ Maze vs. asteroid clone
 
 Sample people in the maze.
 
-
+#### Additional Features
+Infection tracker that shows likelihood of being infected. Collect soap to reset to zero.
 
 -----------------------
 Brainstorming

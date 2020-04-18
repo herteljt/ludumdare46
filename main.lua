@@ -1,4 +1,5 @@
 require "map test/level1"
+
 function love.load()
 
   love.window.setTitle("UHACC - Lundum Dare 46")
@@ -29,6 +30,7 @@ function love.load()
 
   --    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
   animation = newAnimation(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
+  animationRear = newAnimation(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
 
 
 end
@@ -82,9 +84,9 @@ function love.update(dt)
   if spriteY > 0 and topCollision == 0 then
     if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
       bottomCollision = 0
-      animation.currentTime = animation.currentTime + dt
-       if animation.currentTime >= animation.duration then
-           animation.currentTime = animation.currentTime - animation.duration
+      animationRear.currentTime = animationRear.currentTime + dt
+       if animationRear.currentTime >= animationRear.duration then
+           animationRear.currentTime = animationRear.currentTime - animationRear.duration
        end
        spriteY = spriteY - 5
     end
@@ -139,11 +141,23 @@ function love.draw()
       end
     end
 
+--[[
+-- Animation
+    local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
+--]]
+
 -- Animation
     local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
 
+--[[
+    local spriteNum = math.floor(animationRear.currentTime / animationRear.duration * #animationRear.quads) + 1
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(animationRear.spriteSheet, animationRear.quads[spriteNum], spriteX, spriteY, 0, 2)
+--]]
 
 -- Item
     love.graphics.setColor(1, 0, 1)
@@ -169,4 +183,5 @@ function newAnimation(image, width, height, duration)
     animation.currentTime = 0
 
     return animation
+
 end
