@@ -2,7 +2,9 @@
 https://ldjam.com/
 
 Game Engine: https://love2d.org/
-Exporting to HTML: https://github.com/TannerRogalsky/love.js
+Exporting to HTML:
+https://schellingb.github.io/LoveWebBuilder/package
+
 
 Animation Tutorial
 https://love2d.org/wiki/Tutorial:Animation
@@ -43,12 +45,20 @@ Zoom Room Check-In
 #### Objective
 Maze game with obstacles. Player is set in a location and trying to avoid COVID 19 and navigate to a item. Then to the exit.
 
+Item decreases as time goes on. You need to navigate the maze and get to the item before it is gone.
+
+#### Theme
+Keep It Alive
+
+
 #### Player Field
 800 x 600
 24 x 24 pixel sprites
 
 #### Name Ideas
 Pan Dem Mike
+Plague Runner
+Quaken Tine
 
 #### Level Ideas
 Level 1 grocery store

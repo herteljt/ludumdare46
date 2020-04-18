@@ -1,11 +1,17 @@
+-- require "sprite"
+
 function love.load()
 -- Play Field
     playAreaWidth = 800
     playAreaHeight = 600
 
--- Sprite
-    spriteX = 800 / 2
-    spriteY = 600 / 2
+-- Loading Classes
+  --  sprite.load()
+
+  spriteX = 800 / 2
+  spriteY = 600 / 2
+  itemX = 600
+  itemY = 400
 
     animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
 
@@ -83,7 +89,15 @@ function love.draw()
     love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 4)
 
 
--- Aisles
+-- Item
+    love.graphics.setColor(0, 0, 1)
+    love.graphics.rectangle('fill',itemX,itemY,20,20)
+
+
+
+
+-- Barriers
+  love.graphics.setColor(1, 1, 1)
 love.graphics.rectangle('fill', playAreaWidth/4, playAreaHeight/4, 10, 20)
 
 
