@@ -28,9 +28,14 @@ function love.load()
   -- Remove blur from pixel art
   love.graphics.setDefaultFilter("nearest", "nearest")
 
+-- sprite numbers 1 = up, 2 = down, 3 = left, 4 = right
+  spriteSelect = 1
+
   --    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
-  animation = newAnimation(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
-  animationRear = newAnimation(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
+  animationDown = newAnimationDown(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
+  animationUp = newAnimationUp(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
+  animationLeft = newAnimationLeft(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
+  animationRight = newAnimationRight(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
 
 
 end
@@ -62,9 +67,9 @@ function love.update(dt)
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
           if love.keyboard.isDown('d') or love.keyboard.isDown("right") then
-            animation.currentTime = animation.currentTime + dt
-              if animation.currentTime >= animation.duration then
-                animation.currentTime = animation.currentTime - animation.duration
+            animationRight.currentTime = animationRight.currentTime + dt
+              if animationRight.currentTime >= animationRight.duration then
+                animationRight.currentTime = animationRight.currentTime - animationRight.duration
               end
               spriteX = spriteX + 5
           end
@@ -72,9 +77,10 @@ function love.update(dt)
 
   if (spriteX) > 0 then
     if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
-      animation.currentTime = animation.currentTime + dt
-       if animation.currentTime >= animation.duration then
-           animation.currentTime = animation.currentTime - animation.duration
+      animationLeft.currentTime = animationLeft.currentTime + dt
+      selectSprite = 3
+       if animationLeft.currentTime >= animationLeft.duration then
+           animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
        end
        spriteX = spriteX - 5
     end
@@ -83,10 +89,10 @@ function love.update(dt)
 -- Need to figure out how to make the collision stop movement. Global variable?
   if spriteY > 0 and topCollision == 0 then
     if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
-      bottomCollision = 0
-      animationRear.currentTime = animationRear.currentTime + dt
-       if animationRear.currentTime >= animationRear.duration then
-           animationRear.currentTime = animationRear.currentTime - animationRear.duration
+      selectSprite = 1
+      animationUp.currentTime = animationUp.currentTime + dt
+       if animationUp.currentTime >= animationUp.duration then
+           animationUp.currentTime = animationUp.currentTime - animationUp.duration
        end
        spriteY = spriteY - 5
     end
@@ -94,10 +100,10 @@ function love.update(dt)
 
   if (spriteY+ 48) < playAreaHeight and bottomCollision == 0 then
     if love.keyboard.isDown('s') or love.keyboard.isDown("down") then
-      topCollision = 0
-      animation.currentTime = animation.currentTime + dt
-       if animation.currentTime >= animation.duration then
-           animation.currentTime = animation.currentTime - animation.duration
+      selectSprite = 2
+      animationDown.currentTime = animationDown.currentTime + dt
+       if animationDown.currentTime >= animationDown.duration then
+           animationDown.currentTime = animationDown.currentTime - animationDown.duration
        end
        spriteY = spriteY + 5
     end
@@ -148,16 +154,31 @@ function love.draw()
     love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
 --]]
 
+--[[
 -- Animation
     local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
-
---[[
-    local spriteNum = math.floor(animationRear.currentTime / animationRear.duration * #animationRear.quads) + 1
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(animationRear.spriteSheet, animationRear.quads[spriteNum], spriteX, spriteY, 0, 2)
 --]]
+
+    -- Animation
+    if selectSprite == 1 then
+        local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 2)
+    elseif selectSprite == 2 then
+        local spriteNum = math.floor(animationDown.currentTime / animationDown.duration * #animationDown.quads) + 1
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 2)
+    elseif selectSprite == 3 then
+         local spriteNum = math.floor(animationLeft.currentTime / animationLeft.duration * #animationLeft.quads) + 1
+         love.graphics.setColor(1, 1, 1)
+         love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 2)
+     elseif selectSprite == 4 then
+          local spriteNum = math.floor(animationRight.currentTime / animationRight.duration * #animationRight.quads) + 1
+          love.graphics.setColor(1, 1, 1)
+          love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 2)
+    end
 
 -- Item
     love.graphics.setColor(1, 0, 1)
@@ -168,7 +189,7 @@ function love.draw()
 
 end
 
-function newAnimation(image, width, height, duration)
+function newAnimationUp(image, width, height, duration)
     local animation = {}
     animation.spriteSheet = image;
     animation.quads = {};
@@ -183,5 +204,56 @@ function newAnimation(image, width, height, duration)
     animation.currentTime = 0
 
     return animation
+end
 
+
+function newAnimationDown(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+
+    animation.duration = duration or 1
+    animation.currentTime = 0
+
+    return animation
+end
+
+function newAnimationLeft(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+
+    animation.duration = duration or 1
+    animation.currentTime = 0
+
+    return animation
+end
+
+function newAnimationRight(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+
+    animation.duration = duration or 1
+    animation.currentTime = 0
+
+    return animation
 end
