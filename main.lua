@@ -15,8 +15,31 @@ function love.load()
   spriteY = 600 / 2
   spriteWidth = 24
   spriteHeight = 24
-  itemX = 400
-  itemY = 200
+
+walls = {
+      {
+        x = 100,
+        y = 100,
+        width = 24,
+        height = 100
+      },
+      {
+        x = 300,
+        y = 100,
+        width = 24,
+        height = 200
+      },
+      {
+        x = 700,
+        y = 200,
+        width = 24,
+        height = 300
+      }
+
+}
+
+  itemX = 500
+  itemY = 500
   itemWidth = 48
   itemHeight = 48
 
@@ -26,6 +49,7 @@ function love.load()
 
   -- Remove blur from pixel art
   love.graphics.setDefaultFilter("nearest", "nearest")
+
   --    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
   animation = newAnimation(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
 
@@ -58,7 +82,7 @@ end
 function love.update(dt)
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
-          if love.keyboard.isDown('d') then
+          if love.keyboard.isDown('d') or love.keyboard.isDown("right") then
             animation.currentTime = animation.currentTime + dt
               if animation.currentTime >= animation.duration then
                 animation.currentTime = animation.currentTime - animation.duration
@@ -68,7 +92,7 @@ function love.update(dt)
     end
 
   if (spriteX) > 0 then
-    if love.keyboard.isDown('a') then
+    if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
            animation.currentTime = animation.currentTime - animation.duration
@@ -79,7 +103,7 @@ function love.update(dt)
 
 -- Need to figure out how to make the collision stop movement. Global variable?
   if spriteY > 0 and topCollision == 0 then
-    if love.keyboard.isDown('w') then
+    if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
       bottomCollision = 0
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
@@ -90,7 +114,7 @@ function love.update(dt)
   end
 
   if (spriteY+ 48) < playAreaHeight and bottomCollision == 0 then
-    if love.keyboard.isDown('s') then
+    if love.keyboard.isDown('s') or love.keyboard.isDown("down") then
       topCollision = 0
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
@@ -104,43 +128,51 @@ end
          love.event.quit()
     end
 
-
+--[[
     if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, itemX,itemY,itemWidth,itemHeight) then
-        love.graphics.setColor(1, 0, 1)
+        love.graphics.setColor(0, 1, 1)
         wallCollision = 1
     end
+--]]
 
---[[
-
-    if checkCollision(spriteY,itemY,itemHeight) then
-        love.graphics.setColor(1, 0, 1)
-        topCollision = 1
+-- Wall collision check
+    for y = -1, 1 do
+      for x = -1, 1 do
+        for wallsIndex, walls in ipairs(walls) do
+            if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
+              love.graphics.setColor(0, 1, 1)
+              wallCollision = 1
+            end
+        end
+      end
     end
 
-    if checkCollision(itemY, spriteY,spriteHeight) then
-        love.graphics.setColor(1, 0, 1)
-        bottomCollision = 1
-    end --]]
 end
-
 
 function love.draw()
   love.graphics.rectangle('fill', 0, 0, playAreaWidth, playAreaHeight)
 
+  -- Draw walls
+    for y = -1, 1 do
+      for x = -1, 1 do
+        for wallsIndex, walls in ipairs(walls) do
+          love.graphics.setColor(0, 1, 1)
+          love.graphics.rectangle("fill", walls.x, walls.y, walls.width, walls.height)
+        end
+      end
+    end
 
 -- Animation
     local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
 
 
 -- Item
-    love.graphics.setColor(0, 0, 1)
-    love.graphics.rectangle('fill',itemX,itemY,48,48)
+    love.graphics.setColor(1, 0, 1)
+    love.graphics.rectangle('fill',itemX,itemY,24,24)
 
-
--- Barriers
-  love.graphics.setColor(1, 1, 1)
-
+    love.graphics.setColor(1, 1, 1)
 
 
 end
