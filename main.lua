@@ -1,7 +1,10 @@
 -- require "sprite"
 
 function love.load()
--- Play Field
+
+  love.window.setTitle("UHACC - Lundum Dare 46")
+
+  -- Play Field
     playAreaWidth = 800
     playAreaHeight = 600
 
@@ -10,42 +13,60 @@ function love.load()
 
   spriteX = 800 / 2
   spriteY = 600 / 2
-  itemX = 600
-  itemY = 400
+  spriteWidth = 24
+  spriteHeight = 24
+  itemX = 400
+  itemY = 200
+  itemWidth = 24
+  itemHeight = 24
 
---    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
-animation = newAnimation(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
+  topCollision = 0
+  bottomCollision = 0
+  wallCollision = 0
 
--- Obstacles
-obstacle = {
-  {
-            x = 100,
-            y = 100,
-        },
-        {
-            x = playAreaWidth - 100,
-            y = 100,
-        },
-        {
-            x = playAreaWidth / 2,
-            y = playAreaHeight - 100,
-        }
-}
+  -- Remove blur from pixel art
+  love.graphics.setDefaultFilter("nearest", "nearest")
+  --    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
+  animation = newAnimation(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
+
 
 end
+
+--[[ This is the actual function to detect collision between two objects. ]]
+
+-- Collision detection function;
+-- Returns true if two boxes overlap, false if they don't;
+-- x1,y1 are the top-left coords of the first box, while w1,h1 are its width and height;
+-- x2,y2,w2 & h2 are the same, but for the second box.
+
+--[[
+function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
+  return x1 < x2+w2 and
+         x2 < x1+w1 and
+         y1 < y2+h2 and
+         y2 < y1+h1
+end
+--]]
+
+function checkCollision(x,y,z)
+  return x < y + z
+end
+
 
 
 function love.update(dt)
 -- Sprite
-
-    if love.keyboard.isDown('d') then
-      animation.currentTime = animation.currentTime + dt
-       if animation.currentTime >= animation.duration then
-           animation.currentTime = animation.currentTime - animation.duration
-       end
-       spriteX = spriteX + 5
+    if (spriteX + 48) < (playAreaWidth) then
+          if love.keyboard.isDown('d') then
+            animation.currentTime = animation.currentTime + dt
+              if animation.currentTime >= animation.duration then
+                animation.currentTime = animation.currentTime - animation.duration
+              end
+              spriteX = spriteX + 5
+          end
     end
 
+  if (spriteX) > 0 then
     if love.keyboard.isDown('a') then
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
@@ -53,66 +74,72 @@ function love.update(dt)
        end
        spriteX = spriteX - 5
     end
+  end
 
+  if spriteY > 0 and topCollision == 0 then
     if love.keyboard.isDown('w') then
+      bottomCollision = 0
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
            animation.currentTime = animation.currentTime - animation.duration
        end
        spriteY = spriteY - 5
     end
+  end
 
+  if (spriteY+ 48) < playAreaHeight and bottomCollision == 0 then
     if love.keyboard.isDown('s') then
+      topCollision = 0
       animation.currentTime = animation.currentTime + dt
        if animation.currentTime >= animation.duration then
            animation.currentTime = animation.currentTime - animation.duration
        end
        spriteY = spriteY + 5
     end
-
+end
 -- end program
     if love.keyboard.isDown('escape') then
          love.event.quit()
     end
 
 --[[
----starting to add bullets following https://simplegametutorials.github.io/asteroids/
-    for bulletIndex, bullet in ipairs(bullets) do
-         love.graphics.setColor(0, 1, 0)
-         love.graphics.circle('fill', bullet.x, bullet.y, 5)
+    if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, itemX,itemY,itemWidth,itemHeight) then
+        love.graphics.setColor(1, 0, 1)
+        wallCollision = 1
     end
     --]]
+
+    if checkCollision(spriteY,itemY,itemHeight) then
+        love.graphics.setColor(1, 0, 1)
+        topCollision = 1
+    end
+--[[
+    if checkCollision(itemY, spriteY,spriteHeight) then
+        love.graphics.setColor(1, 0, 1)
+        bottomCollision = 1
+    end --]]
 end
 
+
 function love.draw()
+  love.graphics.rectangle('fill', 0, 0, playAreaWidth, playAreaHeight)
+
+
 -- Animation
     local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
-    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 4)
+    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
 
 
 -- Item
     love.graphics.setColor(0, 0, 1)
-    love.graphics.rectangle('fill',itemX,itemY,20,20)
-
-
+    love.graphics.rectangle('fill',itemX,itemY,48,48)
 
 
 -- Barriers
   love.graphics.setColor(1, 1, 1)
-love.graphics.rectangle('fill', playAreaWidth/4, playAreaHeight/4, 10, 20)
 
 
--- Obstacles
-  for y = -1, 1 do
-        for x = -1, 1 do
-            -- etc.
 
-            for obstacleIndex, obstacle in ipairs(obstacle) do
-              --  love.graphics.setColor(1, 1, 0)
-                love.graphics.circle('fill', obstacle.x, obstacle.y, 80)
-            end
-        end
-   end
 end
 
 function newAnimation(image, width, height, duration)
