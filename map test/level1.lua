@@ -1,36 +1,3 @@
---[[
-walls = {
-      {
-        x = 100,
-        y = 100,
-        width = 24,
-        height = 100,
-        red = 0,
-        green = 1,
-        blue = 1
-      },
-      {
-        x = 300,
-        y = 100,
-        width = 24,
-        height = 200,
-        red = 0,
-        green = 1,
-        blue = 0
-      },
-      {
-        x = 700,
-        y = 200,
-        width = 24,
-        height = 300,
-        red = 0,
-        green = 1,
-        blue = 1
-      }
-
-}
---]]
-
 wallWidth = 24
 
 walls = {
@@ -40,7 +7,7 @@ walls = {
       width = 1*wallWidth,
       height = 25*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -50,7 +17,7 @@ walls = {
       width = 33*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -60,7 +27,7 @@ walls = {
       width = 6*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -70,7 +37,7 @@ walls = {
       width = 6*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -80,7 +47,7 @@ walls = {
       width = 1*wallWidth,
       height = 10*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -90,7 +57,7 @@ walls = {
       width = 1*wallWidth,
       height = 10*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -100,7 +67,7 @@ walls = {
       width = 1*wallWidth,
       height = 10*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -110,7 +77,7 @@ walls = {
       width = 1*wallWidth,
       height = 10*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -120,7 +87,7 @@ walls = {
       width = 1*wallWidth,
       height = 10*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -130,7 +97,7 @@ walls = {
       width = 1*wallWidth,
       height = 3*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -140,7 +107,7 @@ walls = {
       width = 4*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -150,7 +117,7 @@ walls = {
       width = 1*wallWidth,
       height = 4*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -160,7 +127,7 @@ walls = {
       width = 1*wallWidth,
       height = 22*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -170,7 +137,7 @@ walls = {
       width = 1*wallWidth,
       height = 5*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -180,7 +147,7 @@ walls = {
       width = 1*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -190,7 +157,7 @@ walls = {
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -200,7 +167,7 @@ walls = {
       width = 10*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -210,7 +177,7 @@ walls = {
       width = 3*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -220,7 +187,7 @@ walls = {
       width = 2*wallWidth,
       height = 6*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -230,7 +197,7 @@ walls = {
       width = 4*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -240,7 +207,7 @@ walls = {
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -250,7 +217,7 @@ walls = {
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -260,7 +227,7 @@ walls = {
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -270,7 +237,7 @@ walls = {
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -280,7 +247,7 @@ walls = {
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -290,7 +257,7 @@ walls = {
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -300,7 +267,7 @@ walls = {
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -310,7 +277,7 @@ walls = {
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -320,7 +287,7 @@ walls = {
       width = 2*wallWidth,
       height = 5*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     },
 
@@ -330,7 +297,7 @@ walls = {
       width = 5*wallWidth,
       height = 1*wallWidth,
       red = 0,
-      green = 1,
+      green = 0,
       blue = 1
     }
 
