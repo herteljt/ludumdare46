@@ -11,8 +11,8 @@ function love.load()
 -- Loading Classes
   --  sprite.load()
 
-  spriteX = 800 / 2
-  spriteY = 600 / 2
+  spriteX = 600
+  spriteY = 200
   spriteWidth = 24
   spriteHeight = 24
 
@@ -24,6 +24,7 @@ function love.load()
   topCollision = 0
   bottomCollision = 0
   wallCollision = 0
+  collisionOffset = 24
 
   -- Remove blur from pixel art
   love.graphics.setDefaultFilter("nearest", "nearest")
@@ -35,7 +36,7 @@ function love.load()
   animationDown = newAnimationDown(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
   animationUp = newAnimationUp(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
   animationLeft = newAnimationLeft(love.graphics.newImage("/sprites/p1_sprite_left_stand_walk_jump.png"), 24, 24, 1)
-  animationRight = newAnimationRight(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
+  animationRight = newAnimationRight(love.graphics.newImage("/sprites/p1_sprite_right_stand_walk_jump.png"), 24, 24, 1)
 
 
 end
@@ -55,57 +56,72 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
---[[
-
-function checkCollision(x,y,z)
-  return x < y + z
-end
---]]
-
 
 function love.update(dt)
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
-          if love.keyboard.isDown('d') or love.keyboard.isDown("right") then
-            animationRight.currentTime = animationRight.currentTime + dt
+      if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
+        if wallCollision == 1 then
+          spriteX = spriteX - collisionOffset
+          wallCollision = 0
+
+        else
+          animationRight.currentTime = animationRight.currentTime + dt
+          selectSprite = 4
               if animationRight.currentTime >= animationRight.duration then
                 animationRight.currentTime = animationRight.currentTime - animationRight.duration
               end
               spriteX = spriteX + 5
-          end
+        end
+      end
     end
 
   if (spriteX) > 0 then
     if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
-      animationLeft.currentTime = animationLeft.currentTime + dt
-      selectSprite = 3
-       if animationLeft.currentTime >= animationLeft.duration then
-           animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
-       end
-       spriteX = spriteX - 5
+      if wallCollision == 1 then
+        spriteX = spriteX + collisionOffset
+        wallCollision = 0
+      else
+        animationLeft.currentTime = animationLeft.currentTime + dt
+        selectSprite = 3
+            if animationLeft.currentTime >= animationLeft.duration then
+              animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
+            end
+            spriteX = spriteX - 5
+      end
     end
   end
 
 -- Need to figure out how to make the collision stop movement. Global variable?
   if spriteY > 0 and topCollision == 0 then
     if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
-      selectSprite = 1
-      animationUp.currentTime = animationUp.currentTime + dt
-       if animationUp.currentTime >= animationUp.duration then
-           animationUp.currentTime = animationUp.currentTime - animationUp.duration
-       end
-       spriteY = spriteY - 5
+      if wallCollision == 1 then
+        spriteY = spriteY + collisionOffset
+        wallCollision = 0
+      else
+        selectSprite = 1
+        animationUp.currentTime = animationUp.currentTime + dt
+          if animationUp.currentTime >= animationUp.duration then
+            animationUp.currentTime = animationUp.currentTime - animationUp.duration
+          end
+          spriteY = spriteY - 5
+      end
     end
   end
 
   if (spriteY+ 48) < playAreaHeight and bottomCollision == 0 then
     if love.keyboard.isDown('s') or love.keyboard.isDown("down") then
-      selectSprite = 2
-      animationDown.currentTime = animationDown.currentTime + dt
-       if animationDown.currentTime >= animationDown.duration then
+      if wallCollision == 1 then
+        spriteY = spriteY - collisionOffset
+        wallCollision = 0
+      else
+        selectSprite = 2
+        animationDown.currentTime = animationDown.currentTime + dt
+          if animationDown.currentTime >= animationDown.duration then
            animationDown.currentTime = animationDown.currentTime - animationDown.duration
        end
        spriteY = spriteY + 5
+     end
     end
 end
 -- end program
@@ -113,19 +129,13 @@ end
          love.event.quit()
     end
 
---[[
-    if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, itemX,itemY,itemWidth,itemHeight) then
-        love.graphics.setColor(0, 1, 1)
-        wallCollision = 1
-    end
---]]
 
 -- Wall collision check
     for y = -1, 1 do
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
             if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
-              love.graphics.setColor(0, 1, 1)
+          --    love.graphics.setColor(0, 1, 1)
               wallCollision = 1
             end
         end
@@ -165,19 +175,19 @@ function love.draw()
     if selectSprite == 1 then
         local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 2)
+        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 1.5)
     elseif selectSprite == 2 then
         local spriteNum = math.floor(animationDown.currentTime / animationDown.duration * #animationDown.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 2)
-    elseif selectSprite == 3 then
-         local spriteNum = math.floor(animationLeft.currentTime / animationLeft.duration * #animationLeft.quads) + 1
-         love.graphics.setColor(1, 1, 1)
-         love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 2)
-     elseif selectSprite == 4 then
-          local spriteNum = math.floor(animationRight.currentTime / animationRight.duration * #animationRight.quads) + 1
-          love.graphics.setColor(1, 1, 1)
-          love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 2)
+        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 1.5)
+    elseif selectSprite == 3 and wallCollision == 0 then
+        local spriteNum = math.floor(animationLeft.currentTime / animationLeft.duration * #animationLeft.quads) + 1
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 1.5)
+     elseif selectSprite == 4 and wallCollision == 0 then
+        local spriteNum = math.floor(animationRight.currentTime / animationRight.duration * #animationRight.quads) + 1
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 1.5)
     end
 
 -- Item
