@@ -17,8 +17,8 @@ function love.load()
   spriteHeight = 24
   itemX = 400
   itemY = 200
-  itemWidth = 24
-  itemHeight = 24
+  itemWidth = 48
+  itemHeight = 48
 
   topCollision = 0
   bottomCollision = 0
@@ -39,19 +39,20 @@ end
 -- x1,y1 are the top-left coords of the first box, while w1,h1 are its width and height;
 -- x2,y2,w2 & h2 are the same, but for the second box.
 
---[[
+
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
          x2 < x1+w1 and
          y1 < y2+h2 and
          y2 < y1+h1
 end
---]]
+
+--[[
 
 function checkCollision(x,y,z)
   return x < y + z
 end
-
+--]]
 
 
 function love.update(dt)
@@ -76,6 +77,7 @@ function love.update(dt)
     end
   end
 
+-- Need to figure out how to make the collision stop movement. Global variable?
   if spriteY > 0 and topCollision == 0 then
     if love.keyboard.isDown('w') then
       bottomCollision = 0
@@ -102,18 +104,19 @@ end
          love.event.quit()
     end
 
---[[
+
     if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, itemX,itemY,itemWidth,itemHeight) then
         love.graphics.setColor(1, 0, 1)
         wallCollision = 1
     end
-    --]]
+
+--[[
 
     if checkCollision(spriteY,itemY,itemHeight) then
         love.graphics.setColor(1, 0, 1)
         topCollision = 1
     end
---[[
+
     if checkCollision(itemY, spriteY,spriteHeight) then
         love.graphics.setColor(1, 0, 1)
         bottomCollision = 1
