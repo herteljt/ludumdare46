@@ -22,6 +22,7 @@ function love.load()
   itemHeight = 48
 
   topCollision = 0
+
   bottomCollision = 0
   wallCollision = 0
   collisionOffset = 24
@@ -37,6 +38,14 @@ function love.load()
   animationUp = newAnimationUp(love.graphics.newImage("/sprites/p1_sprite_rear_stand_walk_jump.png"), 24, 24, 1)
   animationLeft = newAnimationLeft(love.graphics.newImage("/sprites/p1_sprite_left_stand_walk_jump.png"), 24, 24, 1)
   animationRight = newAnimationRight(love.graphics.newImage("/sprites/p1_sprite_right_stand_walk_jump.png"), 24, 24, 1)
+
+  toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
+
+  -- Sound
+  src1 = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
+  src1:setLooping(true)
+  src1:setVolume(.05)
+  src1:play()
 
 
 end
@@ -157,20 +166,6 @@ function love.draw()
       end
     end
 
---[[
--- Animation
-    local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
---]]
-
---[[
--- Animation
-    local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], spriteX, spriteY, 0, 2)
---]]
-
     -- Animation
     if selectSprite == 1 then
         local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
@@ -193,6 +188,12 @@ function love.draw()
 -- Item
     love.graphics.setColor(1, 0, 1)
     love.graphics.rectangle('fill',itemX,itemY,24,24)
+
+    love.graphics.setColor(1, 1, 1)
+
+-- Item
+    love.graphics.setColor(1, 0, 1)
+    love.graphics.draw(toiletpaper, 24, 24, 0)
 
     love.graphics.setColor(1, 1, 1)
 
