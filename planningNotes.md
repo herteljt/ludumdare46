@@ -55,6 +55,9 @@ Keep It Alive
 800 x 600
 24 x 24 pixel sprites
 
+Aisle is 3 sprites wide (72 px)
+Wall is 1 sprite (24 px)
+
 #### Name Ideas
 Pan Dem Mike
 Plague Runner
@@ -66,6 +69,12 @@ Level 1 grocery store
 - maze to make it to paper
 Level 2 airport -
 Level 3 cruise ship
+
+
+Maze vs. asteroid clone
+
+Sample people in the maze.
+
 
 
 -----------------------
