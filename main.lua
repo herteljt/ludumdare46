@@ -1,5 +1,4 @@
--- require "sprite"
-
+require "map test/level1"
 function love.load()
 
   love.window.setTitle("UHACC - Lundum Dare 46")
@@ -15,28 +14,6 @@ function love.load()
   spriteY = 600 / 2
   spriteWidth = 24
   spriteHeight = 24
-
-walls = {
-      {
-        x = 100,
-        y = 100,
-        width = 24,
-        height = 100
-      },
-      {
-        x = 300,
-        y = 100,
-        width = 24,
-        height = 200
-      },
-      {
-        x = 700,
-        y = 200,
-        width = 24,
-        height = 300
-      }
-
-}
 
   itemX = 500
   itemY = 500
@@ -156,7 +133,7 @@ function love.draw()
     for y = -1, 1 do
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
-          love.graphics.setColor(0, 1, 1)
+          love.graphics.setColor(walls.red, walls.green, walls.blue)
           love.graphics.rectangle("fill", walls.x, walls.y, walls.width, walls.height)
         end
       end
