@@ -289,8 +289,7 @@ walls = {
       red = 0,
       green = 0,
       blue = 1
-    }
---[[,
+    },
     {
       x = 28*wallWidth,
       y = 21*wallWidth,
@@ -299,7 +298,7 @@ walls = {
       red = 1,
       green = 0,
       blue = 1
-    }--]]
+    }
 
 
 }
