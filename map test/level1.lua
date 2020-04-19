@@ -289,17 +289,17 @@ walls = {
       red = 0,
       green = 0,
       blue = 1
-    },
-
+    }
+--[[,
     {
       x = 28*wallWidth,
-      y = 22*wallWidth,
+      y = 21*wallWidth,
       width = 5*wallWidth,
       height = 1*wallWidth,
-      red = 0,
+      red = 1,
       green = 0,
       blue = 1
-    }
+    }--]]
 
 
 }

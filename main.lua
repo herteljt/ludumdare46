@@ -62,12 +62,13 @@ function love.load()
   toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
   playerStart = love.graphics.newImage("sprites/p1_sprite_front.png")
 
+
   currentFrame = 1
   frames = {}
 
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf01_lr.png"))
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf02_lr.png"))
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf03_lr.png"))
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_empty_lr.png"))
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_half_lr.png"))
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_full_lr.png"))
 
 
 
@@ -85,13 +86,25 @@ function love.load()
   src1:setVolume(.05)
 --  src1:play()
 
-
+--[[
 tile = {}
    for i=0,3 do -- change 3 to the number of tile images minus 1.
       tile[i] = love.graphics.newImage( "/sprites/tile"..i..".png" )
    end
+--]]
 
-   love.graphics.setNewFont(12)
+
+  tile = {}
+
+    tile[0] = love.graphics.newImage("/sprites/lvl01_floor_creamtile.png")
+    tile[1] = love.graphics.newImage("/sprites/lvl01_shelf_empty_lr.png")
+    tile[2] = love.graphics.newImage("/sprites/lvl01_shelf_half_lr.png")
+    tile[3] = love.graphics.newImage("/sprites/lvl01_shelf_full_lr.png")
+    tile[4] = love.graphics.newImage("/sprites/lvl01_floor_pinktile.png")
+    tile[5] = love.graphics.newImage("/sprites/lvl01_floor1.png")
+
+
+  love.graphics.setNewFont(12)
 
    -- map variables
    map_w = 33
@@ -107,8 +120,8 @@ tile = {}
 
 map = {
 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,1},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1},
+{1,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,1,4,0,4,0,4,1,1,1,1},
+{1,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,1,0,4,0,4,0,4,0,1,1},
 {1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -170,12 +183,13 @@ end
 -- LOVE.UPDATE
 
 function love.update(dt)
-
+--[[
   currentFrame = currentFrame + dt
 
   if currentFrame >= 4 then
     currentFrame = 1
   end
+  --]]
 
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
