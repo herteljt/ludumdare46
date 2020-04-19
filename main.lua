@@ -69,6 +69,14 @@ function love.load()
 
 
 
+  sampleLadyFrames = {}
+
+  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
+  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+
+
+
   -- Sound
   src1 = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
   src1:setLooping(true)
@@ -240,17 +248,10 @@ function love.draw()
         love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 1)
     end
 
---[[
-    local spriteNum = math.floor(animationCovid.currentTime / animationCovid.duration * #animationCovid.quads) + 1
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(animationCovid.spriteSheet, animationCovid.quads[spriteNum], covidX, covidY, 0, 1.5)
---]]
 
-
-  -- Sample Lady
-
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(sampleLady,sampleLadyX, sampleLadyY,0)
+  -- Item
+    --love.graphics.setColor(1, 1, 1)
+    --love.graphics.draw(sampleLady,sampleLadyX, sampleLadyY,0)
     --love.graphics.rectangle('fill',itemX,itemY,24,24)
 
     love.graphics.setColor(1, 1, 1)
@@ -262,6 +263,8 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
 
     love.graphics.draw(frames[math.floor(currentFrame)],400, 400,0)
+
+    love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0)
 
 end
 
