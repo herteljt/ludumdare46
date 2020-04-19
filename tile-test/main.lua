@@ -11,8 +11,8 @@
    map_h = 25
    map_x = 0
    map_y = 0
-   map_offset_x = 0
-   map_offset_y = 0
+   map_offset_x = -24
+   map_offset_y = -24
    map_display_w = 33
    map_display_h = 25
    tile_w = 24
