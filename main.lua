@@ -10,13 +10,18 @@ function love.load()
     playAreaHeight = 600
 
 -- Loading Classes
+  characterScale = 2.5
+
   --  sprite.load()
+  collisionOffset = 6
 
-  spriteX = 600
+  spriteX = 500
   spriteY = 200
-  spriteWidth = 24
-  spriteHeight = 24
+  spriteWidth = 48
+  spriteHeight = 48
 
+  covidStartX = 200
+  covidStartY = 200
   covidX = 200
   covidY = 200
   covidWidth = 24
@@ -33,11 +38,18 @@ function love.load()
   sampleLadyWidth = 48
   sampleLadyHeight = 24
 
+
+  tptimerX = 24
+  tptimerY = 24
+  tptimerWidth = 72
+  tptimerHeight = 72
+
+
   topCollision = 0
 
   bottomCollision = 0
   wallCollision = 0
-  collisionOffset = 12
+
 
   rightPress = 0
   leftPress = 0
@@ -64,11 +76,12 @@ function love.load()
 
 
   currentFrame = 1
-  frames = {}
+  covidFrames = {}
 
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_empty_lr.png"))
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_half_lr.png"))
-  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf_full_lr.png"))
+  table.insert(covidFrames, love.graphics.newImage("/sprites/covid1.png"))
+  table.insert(covidFrames, love.graphics.newImage("/sprites/covid2.png"))
+  table.insert(covidFrames, love.graphics.newImage("/sprites/covid3.png"))
+  table.insert(covidFrames, love.graphics.newImage("/sprites/covid4.png"))
 
 
 
@@ -77,14 +90,16 @@ function love.load()
   table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
   table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
   table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
-
+  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
 
 
   -- Sound
-  src1 = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
-  src1:setLooping(true)
-  src1:setVolume(.05)
---  src1:play()
+  music = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
+  music:setLooping(true)
+  music:setVolume(.05)
+  --music:play()
+
+
 
 --[[
 tile = {}
@@ -93,6 +108,13 @@ tile = {}
    end
 --]]
 
+  tptimerFrames = {}
+  table.insert(tptimerFrames, love.graphics.newImage("/sprites/tp_timer_3.png"))
+  table.insert(tptimerFrames, love.graphics.newImage("/sprites/tp_timer_2.png"))
+  table.insert(tptimerFrames, love.graphics.newImage("/sprites/tp_timer_1.png"))
+  table.insert(tptimerFrames, love.graphics.newImage("/sprites/tp_timer_0.png"))
+
+
 
   tile = {}
 
@@ -100,8 +122,9 @@ tile = {}
     tile[1] = love.graphics.newImage("/sprites/lvl01_shelf_empty_lr.png")
     tile[2] = love.graphics.newImage("/sprites/lvl01_shelf_half_lr.png")
     tile[3] = love.graphics.newImage("/sprites/lvl01_shelf_full_lr.png")
-    tile[4] = love.graphics.newImage("/sprites/lvl01_floor_pinktile.png")
-    tile[5] = love.graphics.newImage("/sprites/lvl01_floor1.png")
+    tile[4] = love.graphics.newImage("/sprites/brick01_h.png")
+    tile[5] = love.graphics.newImage("/sprites/brick01_v.png")
+
 
 
   love.graphics.setNewFont(12)
@@ -120,8 +143,8 @@ tile = {}
 
 map = {
 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-{1,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,1,4,0,4,0,4,1,1,1,1},
-{1,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,4,0,1,0,4,0,4,0,4,0,1,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1},
 {1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -135,7 +158,7 @@ map = {
 {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,1},
 {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1},
-{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1},
 {1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,1,1,1,1,0,0,0,1,0,0,1},
 {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1},
 {1,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1},
@@ -181,28 +204,44 @@ end
 
 
 -- LOVE.UPDATE
-
 function love.update(dt)
---[[
+
   currentFrame = currentFrame + dt
 
-  if currentFrame >= 4 then
+  if currentFrame >= 5 then
     currentFrame = 1
   end
-  --]]
+
+-- Covid Spore Control
+
+  if covidX > 0 and covidX <= playAreaWidth then
+      covidX = covidX + math.random(-1, 1)*math.random(1,3)
+  else
+      covidX = covidStartX
+  end
+
+  if covidY > 0 and covidY <= playAreaWidth then
+    covidY = covidStartY
+  else
+    covidY = covidY + math.random(-1, 5)
+  end
 
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
       if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
+        if wallCollision == 1 then
+            spriteX = spriteX - collisionOffset
+            wallCollision = 0
+        else
           animationRight.currentTime = animationRight.currentTime + dt
           selectSprite = 4
               if animationRight.currentTime >= animationRight.duration then
                 animationRight.currentTime = animationRight.currentTime - animationRight.duration
               end
               spriteX = spriteX + 5
+        end
       end
     end
-
 
   if (spriteX) > 0 then
     if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
@@ -224,9 +263,9 @@ function love.update(dt)
               animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
             end
             spriteX = spriteX - 5
+          end
       end
     end
-  end
 
 -- Need to figure out how to make the collision stop movement. Global variable?
   if spriteY > 0 and topCollision == 0 then
@@ -259,7 +298,13 @@ function love.update(dt)
        spriteY = spriteY + 5
      end
     end
-end
+  end
+
+  -- Sprint collision
+--  if spriteX = sampleLadyX and spriteY = sampleLady then
+
+
+
 -- end program
     if love.keyboard.isDown('escape') then
          love.event.quit()
@@ -267,10 +312,9 @@ end
 
     -- reset program
         if love.keyboard.isDown('r') then
-            src1:stop()
+            music:stop()
             love.load()
         end
-
 
 -- Wall collision check
     for y = -1, 1 do
@@ -283,7 +327,11 @@ end
         end
       end
     end
+
 end
+
+
+
 
 
 -- LOVE.DRAW
@@ -291,11 +339,8 @@ end
 function love.draw()
   love.graphics.rectangle('fill', 0, 0, playAreaWidth, playAreaHeight)
 
-  draw_map()
+--  love.graphics.draw(playerStart, spriteX, spriteY, 0, characterScale)
 
-  if selectSprite == 0 then
-      love.graphics.draw(playerStart, spriteX, spriteY, 0, 1)
-  end
 
   -- Draw walls
     for y = -1, 1 do
@@ -307,23 +352,26 @@ function love.draw()
       end
     end
 
+  love.graphics.setColor(1, 1, 1)
+  draw_map()
+
     -- Animation
   if selectSprite == 1 and wallCollision == 0 then
         local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 1)
+        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, characterScale)
     elseif selectSprite == 2 and wallCollision == 0 then
         local spriteNum = math.floor(animationDown.currentTime / animationDown.duration * #animationDown.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 1)
+        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, characterScale)
     elseif selectSprite == 3 and wallCollision == 0 then
         local spriteNum = math.floor(animationLeft.currentTime / animationLeft.duration * #animationLeft.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 1)
+        love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, characterScale)
      elseif selectSprite == 4 and wallCollision == 0 then
         local spriteNum = math.floor(animationRight.currentTime / animationRight.duration * #animationRight.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 1)
+        love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, characterScale)
     end
 
 
@@ -336,15 +384,19 @@ function love.draw()
 
 -- Item
     love.graphics.setColor(1, 0, 1)
-    love.graphics.draw(toiletpaper, 24, 24, 0)
+  --  love.graphics.draw(toiletpaper, 24, 24, 0)
 
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(frames[math.floor(currentFrame)],400, 400,0)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX, covidY,0,characterScale,characterScale)
 
-    love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0)
 
-end
+    love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0,characterScale,characterScale)
+
+    love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
+
+  end
+
 
 function newAnimationUp(image, width, height, duration)
     local animation = {}

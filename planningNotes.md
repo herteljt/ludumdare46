@@ -60,6 +60,7 @@ Wall is 1 sprite (24 px)
 
 #### Name Ideas
 Pan Dem Mike
+Pan Dem Duck
 Plague Runner
 Quaken Tine
 

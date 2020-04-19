@@ -201,9 +201,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 1 bottom
       x = 5*wallWidth,
-      y = 20*wallWidth,
+      y = 19*wallWidth,
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
@@ -211,9 +211,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 1 bottom
       x = 5*wallWidth,
-      y = 22*wallWidth,
+      y = 21*wallWidth,
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
@@ -221,9 +221,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 2 bottom
       x = 9*wallWidth,
-      y = 20*wallWidth,
+      y = 19*wallWidth,
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
@@ -231,9 +231,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 2 bottom
       x = 9*wallWidth,
-      y = 22*wallWidth,
+      y = 21*wallWidth,
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
@@ -241,9 +241,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 3 top
       x = 13*wallWidth,
-      y = 20*wallWidth,
+      y = 19*wallWidth,
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
@@ -251,9 +251,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 3 bottom
       x = 13*wallWidth,
-      y = 22*wallWidth,
+      y = 21*wallWidth,
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
@@ -261,9 +261,9 @@ walls = {
       blue = 1
     },
 
-    {
+    {--checkout lane 4 top
       x = 17*wallWidth,
-      y = 20*wallWidth,
+      y = 19*wallWidth,
       width = 2*wallWidth,
       height = 2*wallWidth,
       red = 0,
@@ -271,9 +271,9 @@ walls = {
       blue = 1
     },
 
-    {
+    { --checkout lane 4 bottom
       x = 17*wallWidth,
-      y = 22*wallWidth,
+      y = 21*wallWidth,
       width = 1*wallWidth,
       height = 1*wallWidth,
       red = 0,
@@ -281,16 +281,36 @@ walls = {
       blue = 1
     },
 
-    {
-      x = 25*wallWidth,
+    {--entrance wall 4
+      x = 27*wallWidth,
+      y = 6*wallWidth,
+      width = 3*wallWidth,
+      height = 2*wallWidth,
+      red = 1,
+      green = 0,
+      blue = 1
+    },
+
+    {--entrance wall 3
+      x = 27*wallWidth,
+      y = 8*wallWidth,
+      width = 1*wallWidth,
+      height = 4*wallWidth,
+      red = 1,
+      green = 0,
+      blue = 1
+    },
+
+    {--entrance wall 2
+      x = 26*wallWidth,
       y = 12*wallWidth,
       width = 2*wallWidth,
       height = 5*wallWidth,
-      red = 0,
+      red = 1,
       green = 0,
       blue = 1
     },
-    {
+    {--entrance wall 1
       x = 28*wallWidth,
       y = 21*wallWidth,
       width = 5*wallWidth,
