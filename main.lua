@@ -72,7 +72,6 @@ function love.update(dt)
       if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
         if wallCollision == 1 then
           spriteX = spriteX - collisionOffset
-          love.keyboard
           wallCollision = 0
 
         else
@@ -139,13 +138,19 @@ end
          love.event.quit()
     end
 
+    -- reset program
+        if love.keyboard.isDown('r') then
+            src1:stop()
+            love.load()
+        end
+
 
 -- Wall collision check
     for y = -1, 1 do
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
             if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
-          --    love.graphics.setColor(0, 1, 1)
+              love.graphics.setColor(0, 1, 1)
               wallCollision = 1
             end
         end
