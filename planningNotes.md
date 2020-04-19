@@ -78,6 +78,8 @@ Sample people in the maze.
 #### Additional Features
 Infection tracker that shows likelihood of being infected. Collect soap to reset to zero.
 
+Limit the number of cash registers that are open.
+
 -----------------------
 Brainstorming
 Classic 80s arcade

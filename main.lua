@@ -16,16 +16,32 @@ function love.load()
   spriteWidth = 24
   spriteHeight = 24
 
+  covidX = 200
+  covidY = 200
+  covidWidth = 24
+  covidHeight = 24
+
   itemX = 500
   itemY = 500
   itemWidth = 48
   itemHeight = 48
+
+
+  sampleLadyX = 510
+  sampleLadyY = 380
+  sampleLadyWidth = 48
+  sampleLadyHeight = 24
 
   topCollision = 0
 
   bottomCollision = 0
   wallCollision = 0
   collisionOffset = 12
+
+  rightPress = 0
+  leftPress = 0
+  upPress = 0
+  downPress = 0
 
   -- Remove blur from pixel art
   love.graphics.setDefaultFilter("nearest", "nearest")
@@ -39,13 +55,25 @@ function love.load()
   animationLeft = newAnimationLeft(love.graphics.newImage("/sprites/p1_sprite_left_stand_walk_jump.png"), 24, 24, 1)
   animationRight = newAnimationRight(love.graphics.newImage("/sprites/p1_sprite_right_stand_walk_jump.png"), 24, 24, 1)
 
+  animationCovid = newAnimationCovid(love.graphics.newImage("/sprites/lvl01_bad_covid19.png"), 24, 24, 1)
+
+  sampleLady = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
   toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
+
+  currentFrame = 1
+  frames = {}
+
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf01_lr.png"))
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf02_lr.png"))
+  table.insert(frames, love.graphics.newImage("/sprites/lvl01_shelf03_lr.png"))
+
+
 
   -- Sound
   src1 = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
   src1:setLooping(true)
   src1:setVolume(.05)
-  src1:play()
+--  src1:play()
 
 
 end
@@ -67,29 +95,39 @@ end
 
 
 function love.update(dt)
+
+  currentFrame = currentFrame + dt
+
+  if currentFrame >= 4 then
+    currentFrame = 1
+  end
+
 -- Sprite
     if (spriteX + 48) < (playAreaWidth) then
       if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
-        if wallCollision == 1 then
-          spriteX = spriteX - collisionOffset
-          wallCollision = 0
-
-        else
           animationRight.currentTime = animationRight.currentTime + dt
           selectSprite = 4
               if animationRight.currentTime >= animationRight.duration then
                 animationRight.currentTime = animationRight.currentTime - animationRight.duration
               end
               spriteX = spriteX + 5
-        end
       end
     end
+
 
   if (spriteX) > 0 then
     if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
       if wallCollision == 1 then
         spriteX = spriteX + collisionOffset
         wallCollision = 0
+      elseif rightPress == 1 then
+        rightPress = 0
+        animationLeft.currentTime = animationLeft.currentTime + dt
+        selectSprite = 3
+            if animationLeft.currentTime >= animationLeft.duration then
+              animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
+            end
+            spriteX = spriteX - 10
       else
         animationLeft.currentTime = animationLeft.currentTime + dt
         selectSprite = 3
@@ -150,12 +188,23 @@ end
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
             if CheckCollision(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
-              love.graphics.setColor(0, 1, 1)
+          --    love.graphics.setColor(0, 1, 1)
               wallCollision = 1
             end
         end
       end
     end
+
+--[[
+    -- Covid
+      if (covidX + 48) < (playAreaWidth) then
+            animationCovid.currentTime = animationCovid.currentTime + dt
+                if animationCovid.currentTime >= animationCovid.duration then
+                  animationCovid.currentTime = animationCovid.currentTime - animationCovid.duration
+                end
+                spriteX = spriteX + 5
+      end
+--]]
 
 end
 
@@ -173,27 +222,36 @@ function love.draw()
     end
 
     -- Animation
-    if selectSprite == 1 then
+    if selectSprite == 1 and wallCollision == 0 then
         local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 1.5)
-    elseif selectSprite == 2 then
+        love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 1)
+    elseif selectSprite == 2 and wallCollision == 0 then
         local spriteNum = math.floor(animationDown.currentTime / animationDown.duration * #animationDown.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 1.5)
+        love.graphics.draw(animationDown.spriteSheet, animationDown.quads[spriteNum], spriteX, spriteY, 0, 1)
     elseif selectSprite == 3 and wallCollision == 0 then
         local spriteNum = math.floor(animationLeft.currentTime / animationLeft.duration * #animationLeft.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 1.5)
+        love.graphics.draw(animationLeft.spriteSheet, animationLeft.quads[spriteNum], spriteX, spriteY, 0, 1)
      elseif selectSprite == 4 and wallCollision == 0 then
         local spriteNum = math.floor(animationRight.currentTime / animationRight.duration * #animationRight.quads) + 1
         love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 1.5)
+        love.graphics.draw(animationRight.spriteSheet, animationRight.quads[spriteNum], spriteX, spriteY, 0, 1)
     end
 
--- Item
-    love.graphics.setColor(1, 0, 1)
-    love.graphics.rectangle('fill',itemX,itemY,24,24)
+--[[
+    local spriteNum = math.floor(animationCovid.currentTime / animationCovid.duration * #animationCovid.quads) + 1
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(animationCovid.spriteSheet, animationCovid.quads[spriteNum], covidX, covidY, 0, 1.5)
+--]]
+
+
+  -- Sample Lady
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(sampleLady,sampleLadyX, sampleLadyY,0)
+    --love.graphics.rectangle('fill',itemX,itemY,24,24)
 
     love.graphics.setColor(1, 1, 1)
 
@@ -203,6 +261,7 @@ function love.draw()
 
     love.graphics.setColor(1, 1, 1)
 
+    love.graphics.draw(frames[math.floor(currentFrame)],400, 400,0)
 
 end
 
@@ -259,6 +318,24 @@ function newAnimationLeft(image, width, height, duration)
 end
 
 function newAnimationRight(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+        end
+    end
+
+    animation.duration = duration or 1
+    animation.currentTime = 0
+
+    return animation
+end
+
+
+function newAnimationCovid(image, width, height, duration)
     local animation = {}
     animation.spriteSheet = image;
     animation.quads = {};

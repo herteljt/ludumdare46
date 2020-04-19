@@ -63,6 +63,7 @@ end
 
 
 function love.update(dt)-- Need to figure out how to make the collision stop movement. Global variable?
+  updateCovid(dt)
 
   function checkCollision(x1,y1,w1,h1, x2,y2,w2,h2)
     return x1 < x2+w2 and
@@ -72,10 +73,8 @@ function love.update(dt)-- Need to figure out how to make the collision stop mov
   end
 
   function checkRight (x1,y1,w1,h1, x2,y2,w2,h2)
-      if x1+w1 >= x2 and x1 <= x2+w2 then
-        return 1
-      else return 0
-      end
+      return x1 > x2 + w2
+
   end
 
   function checkLeft (x1,y1,w1,h1, x2,y2,w2,h2)
@@ -100,13 +99,14 @@ function love.update(dt)-- Need to figure out how to make the collision stop mov
 
 -- Sprite
     if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
-        if (spriteX + 48) < (playAreaWidth) and rightCollision == 0 then
+        if (spriteX + 48) < (playAreaWidth) and wallCollision == 0 then
         animationRight.currentTime = animationRight.currentTime + dt
         selectSprite = 4
             if animationRight.currentTime >= animationRight.duration then
               animationRight.currentTime = animationRight.currentTime - animationRight.duration
             end
             spriteX = spriteX + 5
+
       end
     end
 
@@ -123,16 +123,15 @@ function love.update(dt)-- Need to figure out how to make the collision stop mov
 
     if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
       if spriteY > 0 and topCollision == 0 then
-
-      rightCollision = 0
-      leftCollision = 0
-      bottomCollision = 0
-      if wallCollision == 1 then
-        spriteY = spriteY + collisionOffset
-        wallCollision = 0
-      else
-        selectSprite = 1
-        animationUp.currentTime = animationUp.currentTime + dt
+        rightCollision = 0
+        leftCollision = 0
+        bottomCollision = 0
+        if wallCollision == 1 then
+          spriteY = spriteY + collisionOffset
+          wallCollision = 0
+        else
+          selectSprite = 1
+          animationUp.currentTime = animationUp.currentTime + dt
           if animationUp.currentTime >= animationUp.duration then
             animationUp.currentTime = animationUp.currentTime - animationUp.duration
           end
@@ -179,7 +178,9 @@ end
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
             if checkCollision(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
-                rightCollision = checkRight(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height)
+              wallCollision = 1
+                -- rightCollision = checkRight(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height)
+              --  leftCollision = checkRight(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height)
 --[[
             if checkLeft(spriteX,spriteY,spriteWidth,spriteHeight, walls.x,walls.y,walls.width,walls.height) then
                   rightCollision = 0
@@ -336,6 +337,23 @@ function newAnimationRight(image, width, height, duration)
     animation.currentTime = 0
 
     return animation
+end
+
+function updateCovid (dt)
+  local animation = {}
+  animation.spriteSheet = image;
+  animation.quads = {};
+
+  for y = 0, image:getHeight() - height, height do
+      for x = 0, image:getWidth() - width, width do
+          table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
+      end
+  end
+
+  animation.duration = duration or 1
+  animation.currentTime = 0
+
+  return animation
 end
 
 function newAnimationBump(image, width, height, duration)
