@@ -1,4 +1,5 @@
 require "map test/level1"
+--require "tile-test/map"
 
 function love.load()
 
@@ -47,7 +48,7 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
 
 -- sprite numbers 1 = up, 2 = down, 3 = left, 4 = right
-  spriteSelect = 1
+  spriteSelect = 0
 
   --    animation = newAnimation(love.graphics.newImage("/sprites/oldHero.png"), 16, 18, 1)
   animationDown = newAnimationDown(love.graphics.newImage("/sprites/p1_sprite_front_stand_walk_jump.png"), 24, 24, 1)
@@ -59,6 +60,7 @@ function love.load()
 
   sampleLady = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
   toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
+  playerStart = love.graphics.newImage("sprites/p1_sprite_front.png")
 
   currentFrame = 1
   frames = {}
@@ -84,7 +86,70 @@ function love.load()
 --  src1:play()
 
 
+tile = {}
+   for i=0,3 do -- change 3 to the number of tile images minus 1.
+      tile[i] = love.graphics.newImage( "/sprites/tile"..i..".png" )
+   end
+
+   love.graphics.setNewFont(12)
+
+   -- map variables
+   map_w = 33
+   map_h = 25
+   map_x = 0
+   map_y = 0
+   map_offset_x = -24
+   map_offset_y = -24
+   map_display_w = 33
+   map_display_h = 25
+   tile_w = 24
+   tile_h = 24
+
+map = {
+{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,1,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1},
+{1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,1,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,1,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,1},
+{1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1},
+{1,0,0,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,1,1,1,1,0,0,0,1,0,0,1},
+{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1},
+{1,0,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1},
+{1,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1},
+{1,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1},
+{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+{1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1}
+
+}
+
+
 end
+
+
+function draw_map()
+   for y=1, map_display_h do
+      for x=1, map_display_w do
+         love.graphics.draw(
+            tile[map[y+map_y][x+map_x]],
+            (x*tile_w)+map_offset_x,
+            (y*tile_h)+map_offset_y )
+      end
+   end
+end
+
+
 
 --[[ This is the actual function to detect collision between two objects. ]]
 
@@ -101,6 +166,8 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
+
+-- LOVE.UPDATE
 
 function love.update(dt)
 
@@ -202,22 +269,19 @@ end
         end
       end
     end
-
---[[
-    -- Covid
-      if (covidX + 48) < (playAreaWidth) then
-            animationCovid.currentTime = animationCovid.currentTime + dt
-                if animationCovid.currentTime >= animationCovid.duration then
-                  animationCovid.currentTime = animationCovid.currentTime - animationCovid.duration
-                end
-                spriteX = spriteX + 5
-      end
---]]
-
 end
+
+
+-- LOVE.DRAW
 
 function love.draw()
   love.graphics.rectangle('fill', 0, 0, playAreaWidth, playAreaHeight)
+
+  draw_map()
+
+  if selectSprite == 0 then
+      love.graphics.draw(playerStart, spriteX, spriteY, 0, 1)
+  end
 
   -- Draw walls
     for y = -1, 1 do
@@ -230,7 +294,7 @@ function love.draw()
     end
 
     -- Animation
-    if selectSprite == 1 and wallCollision == 0 then
+  if selectSprite == 1 and wallCollision == 0 then
         local spriteNum = math.floor(animationUp.currentTime / animationUp.duration * #animationUp.quads) + 1
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(animationUp.spriteSheet, animationUp.quads[spriteNum], spriteX, spriteY, 0, 1)
