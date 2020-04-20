@@ -15,19 +15,30 @@ function love.load()
   --  sprite.load()
   collisionOffset = 12
 
-  spriteX = 430
-  spriteY = 300
-  spriteStartX = 430
-  spriteStartY = 300
+  spriteX = 700
+  spriteY = 540
+  spriteStartX = 700
+  spriteStartY = 500
   spriteWidth = 24*characterScale
   spriteHeight = 24*characterScale
 
   covidStartX = 200
   covidStartY = 200
-  covidX = 200
-  covidY = 200
   covidWidth = 24*characterScale
   covidHeight = 24*characterScale
+
+  covidX1 = 200
+  covidY1 = 100
+
+  covidX2 = 300
+  covidY2 = 300
+
+  covidX3 = 400
+  covidY3 = 400
+
+  covidX4 = 600
+  covidY4 = 500
+
 
   itemX = 500
   itemY = 500
@@ -35,10 +46,21 @@ function love.load()
   itemHeight = 24*characterScale
 
 
-  sampleLadyX = 510
-  sampleLadyY = 380
-  sampleLadyWidth = 48*characterScale
-  sampleLadyHeight = 24*characterScale
+  sampleLady1Width = 48*characterScale
+  sampleLady1Height = 24*characterScale
+
+  sampleLady1X = 580
+  sampleLady1Y = 80
+
+  sampleLady2X = 510
+  sampleLady2Y = 370
+
+  sampleLady3X = 312
+  sampleLady3Y = 110
+
+  sampleLady3X = 510
+  sampleLady3Y = 540
+
 
 
   tptimerX = 24
@@ -73,7 +95,8 @@ function love.load()
 
   animationCovid = newAnimationCovid(love.graphics.newImage("/sprites/lvl01_bad_covid19.png"), 24, 24, 1)
 
-  sampleLady = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
+  sampleLady1 = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
+  sampleLady2 = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
   toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
   playerStart = love.graphics.newImage("sprites/p1_sprite_front.png")
 
@@ -88,16 +111,24 @@ function love.load()
 
 
 
-  sampleLadyFrames = {}
+  sampleLady1Frames = {}
 
-  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
-  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
-  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
-  table.insert(sampleLadyFrames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
+  table.insert(sampleLady1Frames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+  table.insert(sampleLady1Frames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
+  table.insert(sampleLady1Frames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+  table.insert(sampleLady1Frames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
+
+
+  sampleLady2Frames = {}
+
+  table.insert(sampleLady2Frames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+  table.insert(sampleLady2Frames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
+  table.insert(sampleLady2Frames, love.graphics.newImage("/sprites/bad_samplelady1.png"))
+  table.insert(sampleLady2Frames, love.graphics.newImage("/sprites/bad_samplelady2.png"))
 
 
   -- Sound
-  music = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
+  music = love.audio.newSource("/sound/foodstore_music.wav", "static")
   music:setLooping(true)
   music:setVolume(.05)
   music:play()
@@ -228,16 +259,24 @@ function love.update(dt)
 
 -- Covid Spore Control
 
-  if covidX > 0 and covidX <= playAreaWidth then
-      covidX = covidX + math.random(-1, 1)*math.random(1,3)
-  else
-      covidX = covidStartX
+  if covidX1 < 0 or covidX1 > playAreaWidth - 24 or covidY1 < 0 or covidY1 > playAreaHeight - 24 then
+      covidX1 = covidStartX
+      covidY1 = covidYStartY
   end
 
-  if covidY > 0 and covidY <= playAreaWidth then
-    covidY = covidStartY
-  else
-    covidY = covidY + math.random(-1, 5)
+  if covidX2 < 0 or covidX2 > playAreaWidth - 24 or covidY2 < 0 or covidY2 > playAreaHeight - 24 then
+      covidX2 = covidStartX
+      covidY2 = covidYStartY
+  end
+
+  if covidX3 < 0 or covidX3 > playAreaWidth - 24 or covidY3 < 0 or covidY3 > playAreaHeight - 24 then
+      covidX3 = covidStartX
+      covidY3 = covidYStartY
+  end
+
+  if covidX4 < 0 or covidX4 > playAreaWidth - 24 or covidY4 < 0 or covidY4 > playAreaHeight - 24 then
+      covidX4 = covidStartX
+      covidY4 = covidYStartY
   end
 
 -- Sprite
@@ -245,29 +284,35 @@ function love.update(dt)
 --This one works but slows down the system
 
 
-if wallCollision == 0 then
-  if love.keyboard.isDown("w") and upCollision == 0 then
+--if wallCollision == 0 then
+  if love.keyboard.isDown("w") and upCollision == 0 and spriteY > 24 then
     selectSprite = 1
     animationUp.currentTime = animationUp.currentTime + dt
       if animationUp.currentTime >= animationUp.duration then
         animationUp.currentTime = animationUp.currentTime - animationUp.duration
         end
       spriteY = spriteY - 5
-  elseif love.keyboard.isDown("s") and downCollision == 0 then
+  end
+
+  if love.keyboard.isDown("s") and downCollision == 0 and spriteY < playAreaHeight - spriteHeight - 24 then
     selectSprite = 2
     animationDown.currentTime = animationDown.currentTime + dt
       if animationDown.currentTime >= animationDown.duration then
        animationDown.currentTime = animationDown.currentTime - animationDown.duration
      end
      spriteY = spriteY + 5
-  elseif love.keyboard.isDown("d") and rightCollision == 0 then
+  end
+
+if love.keyboard.isDown("d") and rightCollision == 0 and spriteX < playAreaWidth - spriteWidth - 24 then
     selectSprite = 4
     animationRight.currentTime = animationRight.currentTime + dt
       if animationRight.currentTime >= animationRight.duration then
           animationRight.currentTime = animationRight.currentTime - animationRight.duration
       end
       spriteX = spriteX + 6
-  elseif love.keyboard.isDown("a") and leftCollision == 0 then
+end
+
+if love.keyboard.isDown("a") and leftCollision == 0 and spriteX > 24 then
     selectSprite = 3
     animationLeft.currentTime = animationLeft.currentTime + dt
       if animationLeft.currentTime >= animationLeft.duration then
@@ -275,8 +320,38 @@ if wallCollision == 0 then
       end
       spriteX = spriteX - 6
   end
-end
 
+--[[
+  if wallCollision == 1 and love.keyboard.isDown("w") then
+        upCollision = 1
+        downCollision = 0
+        spriteY = spriteY + 8
+        wallCollision = 0
+  end
+
+  if wallCollision == 1 and love.keyboard.isDown("s") then
+        upCollision = 0
+        downCollision = 1
+        spriteY = spriteY - 8
+        wallCollision = 0
+  end
+
+  if wallCollision == 1 and love.keyboard.isDown("d") then
+        rightCollision = 1
+        leftCollision = 0
+        spriteX = spriteX - 8
+        wallCollision = 0
+  end
+
+  if wallCollision == 1 and love.keyboard.isDown("a") then
+        leftCollision = 1
+        rightCollision = 0
+        spriteX = spriteX + 8
+        wallCollision = 0
+  end
+--]]
+--end
+--[[
 if wallCollision == 1 then
     if love.keyboard.isDown("w") then
       upCollision = 1
@@ -300,7 +375,7 @@ if wallCollision == 1 then
       wallCollision = 0
     end
   end
-
+--]]
 
 --[[ This one works but slows down the system
   if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) and (spriteX + 48) < (playAreaWidth) then
@@ -538,13 +613,18 @@ function love.draw()
 
 
 -- Disable for testing
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX, covidY,0,characterScale,characterScale)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX1, covidY1,0,characterScale,characterScale)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX2, covidY2,0,characterScale,characterScale)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX3, covidY3,0,characterScale,characterScale)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX4, covidY4,0,characterScale,characterScale)
 
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX+400, covidY-50,0,characterScale,characterScale)
 
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX-120, covidY-80,0,characterScale,characterScale)
 
-    love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0,characterScale,characterScale)
+    love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady1X, sampleLady1Y,0,characterScale,characterScale)
+    love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
+    love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady3X, sampleLady3Y,0,characterScale,characterScale)
+    --love.graphics.draw(sampleLady2Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
+
 
     love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
 
