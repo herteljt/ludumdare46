@@ -10,7 +10,7 @@ function love.load()
     playAreaHeight = 600
 
 -- Loading Classes
-  characterScale = 1.5
+  characterScale = 1
 
   --  sprite.load()
   collisionOffset = 12
@@ -241,7 +241,68 @@ function love.update(dt)
   end
 
 -- Sprite
---[[
+
+--This one works but slows down the system
+
+
+if wallCollision == 0 then
+  if love.keyboard.isDown("w") and upCollision == 0 then
+    selectSprite = 1
+    animationUp.currentTime = animationUp.currentTime + dt
+      if animationUp.currentTime >= animationUp.duration then
+        animationUp.currentTime = animationUp.currentTime - animationUp.duration
+        end
+      spriteY = spriteY - 5
+  elseif love.keyboard.isDown("s") and downCollision == 0 then
+    selectSprite = 2
+    animationDown.currentTime = animationDown.currentTime + dt
+      if animationDown.currentTime >= animationDown.duration then
+       animationDown.currentTime = animationDown.currentTime - animationDown.duration
+     end
+     spriteY = spriteY + 5
+  elseif love.keyboard.isDown("d") and rightCollision == 0 then
+    selectSprite = 4
+    animationRight.currentTime = animationRight.currentTime + dt
+      if animationRight.currentTime >= animationRight.duration then
+          animationRight.currentTime = animationRight.currentTime - animationRight.duration
+      end
+      spriteX = spriteX + 6
+  elseif love.keyboard.isDown("a") and leftCollision == 0 then
+    selectSprite = 3
+    animationLeft.currentTime = animationLeft.currentTime + dt
+      if animationLeft.currentTime >= animationLeft.duration then
+          animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
+      end
+      spriteX = spriteX - 6
+  end
+end
+
+if wallCollision == 1 then
+    if love.keyboard.isDown("w") then
+      upCollision = 1
+      downCollision = 0
+      spriteY = spriteY + 8
+      wallCollision = 0
+    elseif love.keyboard.isDown("s") then
+      upCollision = 0
+      downCollision = 1
+      spriteY = spriteY - 8
+      wallCollision = 0
+    elseif love.keyboard.isDown("d") then
+      rightCollision = 1
+      leftCollision = 0
+      spriteX = spriteX - 8
+      wallCollision = 0
+    elseif love.keyboard.isDown("a") then
+      leftCollision = 1
+      rightCollision = 0
+      spriteX = spriteX + 8
+      wallCollision = 0
+    end
+  end
+
+
+--[[ This one works but slows down the system
   if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) and (spriteX + 48) < (playAreaWidth) then
       if leftCollision == 1 then
         spriteX = spriteX + 6
@@ -329,6 +390,7 @@ function love.update(dt)
   end
 --]]
 
+--[[ Another attempt. Does not work
     if spriteX + 48 < playAreaWidth and love.keyboard.isDown('d') and wallCollision == 0 then
           selectSprite = 4
           animationRight.currentTime = animationRight.currentTime + dt
@@ -365,7 +427,19 @@ function love.update(dt)
        spriteY = spriteY + 5
   end
 
+  if wallCollision == 1 then
+    if love.keyboard.isDown("w") then
+      upCollision = 1
+    elseif love.keyboard.isDown("s") then
+      downCollision = 1
+    elseif love.keyboard.isDown("d") then
+      rightCollision = 1
+    elseif love.keyboard.isDown("a") then
+      leftCollision = 1
+    end
+  end
 
+--]]
   -- Sprint collision
 --  if spriteX = sampleLadyX and spriteY = sampleLady then
 
@@ -454,13 +528,15 @@ function love.draw()
 
     love.graphics.setColor(1, 1, 1)
 
+
+--[[ Disabled for testing
     love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX, covidY,0,characterScale,characterScale)
 
 
     love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0,characterScale,characterScale)
 
     love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
-
+--]]
   end
 
 
