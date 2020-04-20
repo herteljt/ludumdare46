@@ -13,10 +13,12 @@ function love.load()
   characterScale = 1.5
 
   --  sprite.load()
-  collisionOffset = 6
+  collisionOffset = 12
 
-  spriteX = 500
-  spriteY = 200
+  spriteX = 430
+  spriteY = 300
+  spriteStartX = 430
+  spriteStartY = 300
   spriteWidth = 24*characterScale
   spriteHeight = 24*characterScale
 
@@ -48,8 +50,8 @@ function love.load()
   wallCollision = 0
   rightCollision = 0
   leftCollision = 0
-  topCollision = 0
-  bottomCollision = 0
+  upCollision = 0
+  downCollision = 0
 
 
   rightPress = 0
@@ -171,8 +173,16 @@ map = {
 
 }
 
+function reset()
+   spriteX = spriteStartX
+   spriteY = spriteStartY
+   wallCollision = 0
+  -- music:play()
+end
+
 
 end
+
 
 function draw_map()
    for y = 1, map_display_h do
@@ -231,16 +241,22 @@ function love.update(dt)
   end
 
 -- Sprite
-  if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
-      if wallCollision == 1 and rightCollision < 10 then
-            spriteX = spriteX - 1
-            wallCollision = 0
-            rightCollision = rightCollision + 1
-      else
-      spriteX = spriteX + 6
-      rightCollision = 0
-      animationRight.currentTime = animationRight.currentTime + dt
-      selectSprite = 4
+--[[
+  if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) and (spriteX + 48) < (playAreaWidth) then
+      if leftCollision == 1 then
+        spriteX = spriteX + 6
+        leftCollision = 0
+        wallCollision = 0
+      elseif wallCollision == 1 then
+        wallCollision = 0
+        rightCollision = 1
+        leftCollision = 0
+        upCollision = 0
+        downCollision = 0
+      elseif wallCollision == 0 and rightCollision == 0 then
+        selectSprite = 4
+        leftCollision = 0
+        animationRight.currentTime = animationRight.currentTime + dt
           if animationRight.currentTime >= animationRight.duration then
             animationRight.currentTime = animationRight.currentTime - animationRight.duration
           end
@@ -249,15 +265,20 @@ function love.update(dt)
   end
 
   if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
-      if wallCollision == 1 and leftCollision < 10 then
-        spriteX = spriteX + 1
+      if rightCollision == 1 then
+        spriteX = spriteX - 6
+        rightCollision = 0
         wallCollision = 0
-        leftCollision = leftCollision + 1
-      else
-      spriteX = spriteX - 6
-      leftCollision = 0
-      animationLeft.currentTime = animationLeft.currentTime + dt
+      elseif wallCollision == 1 then
+        wallCollision = 0
+        rightCollision = 0
+        leftCollision = 1
+        upCollision = 0
+        downCollision = 0
+      elseif wallCollision == 0 then
       selectSprite = 3
+      spriteX = spriteX - 6
+      animationLeft.currentTime = animationLeft.currentTime + dt
           if animationLeft.currentTime >= animationLeft.duration then
             animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
           end
@@ -266,98 +287,85 @@ function love.update(dt)
   end
 
   if love.keyboard.isDown('s') or love.keyboard.isDown("down") then
-      animationLeft.currentTime = animationLeft.currentTime + dt
+    if upCollision == 1 then
+        spriteY = spriteY + 6
+        upCollision = 0
+        wallCollision = 0
+    elseif wallCollision == 1 then
+      wallCollision = 0
+      rightCollision = 0
+      leftCollision = 0
+      upCollision = 0
+      downCollision = 1
+    elseif wallCollision == 0 then
       selectSprite = 2
+      animationLeft.currentTime = animationLeft.currentTime + dt
           if animationLeft.currentTime >= animationLeft.duration then
             animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
           end
           spriteY = spriteY + 5
+    end
   end
 
   if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
-      animationLeft.currentTime = animationLeft.currentTime + dt
+    if downCollision == 1 then
+      spriteY = spriteY - 6
+      downCollision = 0
+      wallCollision = 0
+    elseif wallCollision == 1 then
+      wallCollision = 0
+      rightCollision = 0
+      leftCollision = 0
+      upCollision = 1
+      downCollision = 0
+    elseif wallCollision == 0 then
       selectSprite = 1
+      animationLeft.currentTime = animationLeft.currentTime + dt
           if animationLeft.currentTime >= animationLeft.duration then
             animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
           end
           spriteY = spriteY - 5
+    end
   end
+--]]
 
---[[ Rebuilding the collision
-    if (spriteX + 48) < (playAreaWidth) then
-      if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
-        if wallCollision == 1 then
-            spriteX = spriteX - collisionOffset
-            wallCollision = 0
-        else
-          animationRight.currentTime = animationRight.currentTime + dt
+    if spriteX + 48 < playAreaWidth and love.keyboard.isDown('d') and wallCollision == 0 then
           selectSprite = 4
+          animationRight.currentTime = animationRight.currentTime + dt
               if animationRight.currentTime >= animationRight.duration then
                 animationRight.currentTime = animationRight.currentTime - animationRight.duration
               end
-              spriteX = spriteX + 5
-        end
-      end
+              spriteX = spriteX + 6
     end
 
-  if (spriteX) > 0 then
-    if love.keyboard.isDown('a') or love.keyboard.isDown("left") then
-      if wallCollision == 1 then
-        spriteX = spriteX + collisionOffset
-        wallCollision = 0
-      elseif rightPress == 1 then
-        rightPress = 0
-        animationLeft.currentTime = animationLeft.currentTime + dt
+  if spriteX > 0 and love.keyboard.isDown('a') and wallCollision == 0 then
         selectSprite = 3
+        animationLeft.currentTime = animationLeft.currentTime + dt
             if animationLeft.currentTime >= animationLeft.duration then
               animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
             end
-            spriteX = spriteX - 10
-      else
-        animationLeft.currentTime = animationLeft.currentTime + dt
-        selectSprite = 3
-            if animationLeft.currentTime >= animationLeft.duration then
-              animationLeft.currentTime = animationLeft.currentTime - animationLeft.duration
-            end
-            spriteX = spriteX - 5
-          end
-      end
-    end
+            spriteX = spriteX - 6
+  end
 
--- Need to figure out how to make the collision stop movement. Global variable?
-  if spriteY > 0 and topCollision == 0 then
-    if love.keyboard.isDown('w') or love.keyboard.isDown("up") then
-      if wallCollision == 1 then
-        spriteY = spriteY + collisionOffset
-        wallCollision = 0
-      else
+  if spriteY > 0 and love.keyboard.isDown('w') and wallCollision == 0 then
         selectSprite = 1
         animationUp.currentTime = animationUp.currentTime + dt
           if animationUp.currentTime >= animationUp.duration then
             animationUp.currentTime = animationUp.currentTime - animationUp.duration
           end
           spriteY = spriteY - 5
-      end
-    end
   end
 
-  if (spriteY+ 48) < playAreaHeight and bottomCollision == 0 then
-    if love.keyboard.isDown('s') or love.keyboard.isDown("down") then
-      if wallCollision == 1 then
-        spriteY = spriteY - collisionOffset
-        wallCollision = 0
-      else
+  if (spriteY+ 48) < playAreaHeight and love.keyboard.isDown('s') and wallCollision == 0 then
         selectSprite = 2
         animationDown.currentTime = animationDown.currentTime + dt
           if animationDown.currentTime >= animationDown.duration then
            animationDown.currentTime = animationDown.currentTime - animationDown.duration
        end
        spriteY = spriteY + 5
-     end
-    end
   end
 
---]]
+
   -- Sprint collision
 --  if spriteX = sampleLadyX and spriteY = sampleLady then
 
@@ -411,7 +419,7 @@ function love.draw()
     end
 
   love.graphics.setColor(1, 1, 1)
-  draw_map()
+  --draw_map()
 
     -- Animation
   if selectSprite == 1 then
