@@ -119,7 +119,7 @@ captureCount = 0
   sampleLady2 = love.graphics.newImage("/sprites/lvl01_bad_samplelady.png")
   toiletpaper = love.graphics.newImage("/sprites/tp_dummy72x72.png")
   playerStart = love.graphics.newImage("sprites/p1_sprite_front.png")
-
+  checkout = love.graphics.newImage("sprites/lvl01_checkout.png")
 
   currentFrame = 1
   covidFrames = {}
@@ -700,21 +700,20 @@ function love.draw()
 
     love.graphics.setColor(1, 1, 1)
 
+    -- Checkouts
 
--- Disable for testing
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX1, covidY1,0,characterScale,characterScale)
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX2, covidY2,0,characterScale,characterScale)
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX3, covidY3,0,characterScale,characterScale)
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX4, covidY4,0,characterScale,characterScale)
-    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX5, covidY5,0,characterScale,characterScale)
+        love.graphics.draw(checkout,120,456,0)
+        love.graphics.draw(checkout,216,456,0)
+        love.graphics.draw(checkout,312,456,0)
+        love.graphics.draw(checkout,408,456,0)
 
-
-
+-- Sample Ladies
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady1X, sampleLady1Y,0,characterScale,characterScale)
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady3X, sampleLady3Y,0,characterScale,characterScale)
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady4X, sampleLady4Y,0,characterScale,characterScale)
     --love.graphics.draw(sampleLady2Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
+
 
     if spriteX == spriteStartX and spriteY == spriteStartY then
       love.graphics.draw(playerStart,spriteStartX,spriteStartY,0,characterScale)
@@ -734,7 +733,15 @@ function love.draw()
       love.graphics.draw(tptimerFrames[4],tptimerX,tptimerY,0)
     end
 
---    love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
+
+    -- Covid Spores
+        love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX1, covidY1,0,characterScale,characterScale)
+        love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX2, covidY2,0,characterScale,characterScale)
+        love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX3, covidY3,0,characterScale,characterScale)
+        love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX4, covidY4,0,characterScale,characterScale)
+        love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX5, covidY5,0,characterScale,characterScale)
+
+
 
   end
 
