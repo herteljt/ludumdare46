@@ -9,6 +9,10 @@ function love.load()
     playAreaWidth = 800
     playAreaHeight = 600
 
+-- Score Variable
+deathCount = 0
+captureCount = 0
+
 -- Loading Classes
   characterScale = 1.5
 
@@ -18,26 +22,39 @@ function love.load()
   spriteX = 700
   spriteY = 540
   spriteStartX = 700
-  spriteStartY = 500
+  spriteStartY = 540
   spriteWidth = 24*characterScale
   spriteHeight = 24*characterScale
 
-  covidStartX = 200
-  covidStartY = 200
+
   covidWidth = 24*characterScale
   covidHeight = 24*characterScale
 
-  covidX1 = 200
+  covidX1 = 700
   covidY1 = 100
+  covidStartX1 = 700
+  covidStartY1 = 100
+  covid1xdirection = 1
 
-  covidX2 = 300
-  covidY2 = 300
+  covidX2 = 130
+  covidY2 = 100
+  covidStartX2 = 100
+  covidStartY2 = 200
 
-  covidX3 = 400
+  covidX3 = 100
   covidY3 = 400
+  covidStartX3 = 100
+  covidStartY3 = 400
 
-  covidX4 = 600
-  covidY4 = 500
+  covidX4 = 430
+  covidY4 = 100
+  covidStartX4 = 430
+  covidStartY4 = 100
+
+  covidX5 = 600
+  covidY5 = 500
+  covidStartX5 = 600
+  covidStartY5 = 500
 
 
   itemX = 500
@@ -61,13 +78,16 @@ function love.load()
   sampleLady3X = 510
   sampleLady3Y = 540
 
+  sampleLady4X = 310
+  sampleLady4Y = 30
+
 
 
   tptimerX = 24
   tptimerY = 24
   tptimerWidth = 72
   tptimerHeight = 72
-
+  tpTimer = 4
 
   wallCollision = 0
   rightCollision = 0
@@ -133,7 +153,14 @@ function love.load()
   music:setVolume(.05)
   music:play()
 
+  wasted = love.audio.newSource("/sound/Wasted.wav", "static")
+  wasted:setVolume(.5)
 
+  tp_capture = love.audio.newSource("/sound/TP_capture.wav", "static")
+  tp_capture:setVolume(.5)
+
+  win = love.audio.newSource("/sound/Win.wav", "static")
+  win:setVolume(.5)
 
 --[[
 tile = {}
@@ -260,23 +287,44 @@ function love.update(dt)
 -- Covid Spore Control
 
   if covidX1 < 0 or covidX1 > playAreaWidth - 24 or covidY1 < 0 or covidY1 > playAreaHeight - 24 then
-      covidX1 = covidStartX
-      covidY1 = covidYStartY
+      covidX1 = covidStartX1
+      covidY1 = covidStartY1
+  else
+      covidX1 = covidX1 - math.random(1, 2)
+      covidY1 = covidY1 +math.random(-2, 2)
   end
 
+
   if covidX2 < 0 or covidX2 > playAreaWidth - 24 or covidY2 < 0 or covidY2 > playAreaHeight - 24 then
-      covidX2 = covidStartX
-      covidY2 = covidYStartY
+      covidX2 = covidStartX2
+      covidY2 = covidStartY2
+    else
+      covidX2 = covidX2 +math.random(-1, 1)
+      covidY2 = covidY2 +math.random(0, 1.5)
   end
 
   if covidX3 < 0 or covidX3 > playAreaWidth - 24 or covidY3 < 0 or covidY3 > playAreaHeight - 24 then
-      covidX3 = covidStartX
-      covidY3 = covidYStartY
+      covidX3 = covidStartX3
+      covidY3 = covidStartY3
+    else
+      covidX3 = covidX3 +math.random(2, 2)
+      covidY3 = covidY3 +math.random(-2, 1)
   end
 
   if covidX4 < 0 or covidX4 > playAreaWidth - 24 or covidY4 < 0 or covidY4 > playAreaHeight - 24 then
-      covidX4 = covidStartX
-      covidY4 = covidYStartY
+      covidX4 = covidStartX4
+      covidY4 = covidStartY4
+    else
+      covidX4 = covidX4 +math.random(-1,1)
+      covidY4 = covidY4 +math.random(0, 2)
+  end
+
+  if covidX5 < 0 or covidX5 > playAreaWidth - 24 or covidY5 < 0 or covidY5 > playAreaHeight - 24 then
+      covidX5 = covidStartX5
+      covidY5 = covidStartY5
+    else
+      covidX5 = covidX5 +math.random(-1,1)
+      covidY5 = covidY5 +math.random(-1, 1)
   end
 
 -- Sprite
@@ -285,7 +333,7 @@ function love.update(dt)
 
 
 --if wallCollision == 0 then
-  if love.keyboard.isDown("w") and upCollision == 0 and spriteY > 24 then
+  if love.keyboard.isDown("w") or  love.keyboard.isDown("up") and upCollision == 0 and spriteY > 24 then
     selectSprite = 1
     animationUp.currentTime = animationUp.currentTime + dt
       if animationUp.currentTime >= animationUp.duration then
@@ -294,7 +342,7 @@ function love.update(dt)
       spriteY = spriteY - 5
   end
 
-  if love.keyboard.isDown("s") and downCollision == 0 and spriteY < playAreaHeight - spriteHeight - 24 then
+  if love.keyboard.isDown("s") or  love.keyboard.isDown("down") and downCollision == 0 and spriteY < playAreaHeight - spriteHeight - 24 then
     selectSprite = 2
     animationDown.currentTime = animationDown.currentTime + dt
       if animationDown.currentTime >= animationDown.duration then
@@ -303,7 +351,7 @@ function love.update(dt)
      spriteY = spriteY + 5
   end
 
-if love.keyboard.isDown("d") and rightCollision == 0 and spriteX < playAreaWidth - spriteWidth - 24 then
+if love.keyboard.isDown("d") or  love.keyboard.isDown("right") and rightCollision == 0 and spriteX < playAreaWidth - spriteWidth - 24 then
     selectSprite = 4
     animationRight.currentTime = animationRight.currentTime + dt
       if animationRight.currentTime >= animationRight.duration then
@@ -312,7 +360,7 @@ if love.keyboard.isDown("d") and rightCollision == 0 and spriteX < playAreaWidth
       spriteX = spriteX + 6
 end
 
-if love.keyboard.isDown("a") and leftCollision == 0 and spriteX > 24 then
+if love.keyboard.isDown("a") or  love.keyboard.isDown("left") and leftCollision == 0 and spriteX > 24 then
     selectSprite = 3
     animationLeft.currentTime = animationLeft.currentTime + dt
       if animationLeft.currentTime >= animationLeft.duration then
@@ -516,9 +564,50 @@ if wallCollision == 1 then
 
 --]]
   -- Sprint collision
---  if spriteX = sampleLadyX and spriteY = sampleLady then
+
+if (math.abs(spriteX - sampleLady1X) < 24 and math.abs(spriteY - sampleLady1Y) < 24)
+  or (math.abs(spriteX - sampleLady2X) < 24 and math.abs(spriteY - sampleLady2Y) < 24)
+  or (math.abs(spriteX - sampleLady3X) < 24 and math.abs(spriteY - sampleLady3Y) < 24)
+  or (math.abs(spriteX - sampleLady4X) < 24 and math.abs(spriteY - sampleLady4Y) < 24)
+  then
+  wasted:play()
+  spriteX= spriteStartX
+  spriteY=spriteStartY
+  deathCount = deathCount + 1
+  tpTimer = tpTimer - 1
+end
 
 
+if (math.abs(spriteX - covidX1) < 24 and math.abs(spriteY - covidY1) < 24)
+  or (math.abs(spriteX - covidX2) < 24 and math.abs(spriteY - covidY2) < 24)
+  or (math.abs(spriteX - covidX3) < 24 and math.abs(spriteY - covidY3) < 24)
+  or (math.abs(spriteX - covidX4) < 24 and math.abs(spriteY - covidY4) < 24)
+  or (math.abs(spriteX - covidX5) < 24 and math.abs(spriteY - covidY5) < 24)
+  then
+  wasted:play()
+  spriteX= spriteStartX
+  spriteY=spriteStartY
+  deathCount = deathCount + 1
+  tpTimer = tpTimer - 1
+end
+
+
+if (math.abs(spriteX - tptimerX) < 48 and math.abs(spriteY - tptimerY) < 48)
+  then
+  win:play()
+  spriteX= spriteStartX
+  spriteY=spriteStartY
+  captureCount = captureCount + 1
+  tpTimer = 4
+end
+
+
+
+if deathCount >= 4 then
+    wasted:play()
+    music:stop()
+    love.load()
+end
 
 -- end program
     if love.keyboard.isDown('escape') then
@@ -617,16 +706,35 @@ function love.draw()
     love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX2, covidY2,0,characterScale,characterScale)
     love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX3, covidY3,0,characterScale,characterScale)
     love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX4, covidY4,0,characterScale,characterScale)
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX5, covidY5,0,characterScale,characterScale)
 
 
 
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady1X, sampleLady1Y,0,characterScale,characterScale)
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
     love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady3X, sampleLady3Y,0,characterScale,characterScale)
+    love.graphics.draw(sampleLady1Frames[math.floor(currentFrame)],sampleLady4X, sampleLady4Y,0,characterScale,characterScale)
     --love.graphics.draw(sampleLady2Frames[math.floor(currentFrame)],sampleLady2X, sampleLady2Y,0,characterScale,characterScale)
 
+    if spriteX == spriteStartX and spriteY == spriteStartY then
+      love.graphics.draw(playerStart,spriteStartX,spriteStartY,0,characterScale)
+    end
 
-    love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
+
+    if tpTimer == 4 then
+      love.graphics.draw(tptimerFrames[1],tptimerX,tptimerY,0)
+    end
+    if tpTimer == 3 then
+      love.graphics.draw(tptimerFrames[2],tptimerX,tptimerY,0)
+    end
+    if tpTimer == 2 then
+      love.graphics.draw(tptimerFrames[3],tptimerX,tptimerY,0)
+    end
+    if tpTimer == 1 then
+      love.graphics.draw(tptimerFrames[4],tptimerX,tptimerY,0)
+    end
+
+--    love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
 
   end
 
