@@ -10,7 +10,7 @@ function love.load()
     playAreaHeight = 600
 
 -- Loading Classes
-  characterScale = 1
+  characterScale = 1.5
 
   --  sprite.load()
   collisionOffset = 12
@@ -100,7 +100,7 @@ function love.load()
   music = love.audio.newSource("/sound/foodstore_demo.mp3", "static")
   music:setLooping(true)
   music:setVolume(.05)
-  --music:play()
+  music:play()
 
 
 
@@ -450,11 +450,16 @@ if wallCollision == 1 then
          love.event.quit()
     end
 
-    -- reset program
+-- reset program
         if love.keyboard.isDown('r') then
             music:stop()
             love.load()
         end
+
+-- stop music
+      if love.keyboard.isDown('space') then
+            music:stop()
+      end
 
 -- Wall collision check
     for y = -1, 1 do
@@ -486,14 +491,17 @@ function love.draw()
     for y = -1, 1 do
       for x = -1, 1 do
         for wallsIndex, walls in ipairs(walls) do
-          love.graphics.setColor(walls.red, walls.green, walls.blue)
-          love.graphics.rectangle("fill", walls.x, walls.y, walls.width, walls.height)
+          --love.graphics.setColor(walls.red, walls.green, walls.blue)
+          love.graphics.setColor(0,0,0)
+          love.graphics.rectangle("line", walls.x, walls.y, walls.width, walls.height)
         end
       end
     end
 
   love.graphics.setColor(1, 1, 1)
-  --draw_map()
+
+  draw_map()
+
 
     -- Animation
   if selectSprite == 1 then
@@ -529,14 +537,17 @@ function love.draw()
     love.graphics.setColor(1, 1, 1)
 
 
---[[ Disabled for testing
+-- Disable for testing
     love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX, covidY,0,characterScale,characterScale)
 
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX+400, covidY-50,0,characterScale,characterScale)
+
+    love.graphics.draw(covidFrames[math.floor(currentFrame)],covidX-120, covidY-80,0,characterScale,characterScale)
 
     love.graphics.draw(sampleLadyFrames[math.floor(currentFrame)],sampleLadyX, sampleLadyY,0,characterScale,characterScale)
 
     love.graphics.draw(tptimerFrames[math.floor(currentFrame)],tptimerX, tptimerY,0)
---]]
+
   end
 
 
