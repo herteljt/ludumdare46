@@ -89,7 +89,7 @@ Level 2 airport -
 Level 3 cruise ship
 
 
-Maze vs. asteroid clone
+Maze vs. asteroid clone vs
 
 Sample people in the maze.
 
